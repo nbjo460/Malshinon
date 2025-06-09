@@ -1,0 +1,29 @@
+CREATE DATABASE IF NOT EXISTS MALSHINON;
+
+USE MALSHINON;
+
+DROP TABLE IF EXISTS PEOPLE;
+DROP TABLE IF EXISTS IntelReports;
+
+CREATE TABLE PEOPLE 
+(
+`ID` INT PRIMARY KEY AUTO_INCREMENT,
+`FIRST_NAME` VARCHAR(20) UNIQUE not null,
+`LAST_NAME` VARCHAR(20) UNIQUE not null,
+`SECRET_CODE` VARCHAR (30) UNIQUE not null,
+`TYPE` ENUM ('reporter', 'target', 'both', 'potential_agent') not null,
+`NUM_REPORTS` INT DEFAULT 0,
+`NUM_MENTIONS` INT DEFAULT 0
+);
+
+CREATE TABLE IntelReports 
+(
+`ID` INT PRIMARY KEY AUTO_INCREMENT,
+`Reporter_id` int not null,
+FOREIGN KEY (`Reporter_id`) REFERENCES `PEOPLE`(`ID`),
+`TARGET_ID` INT not null,
+FOREIGN KEY (`TARGET_ID`) REFERENCES `PEOPLE`(`ID`),
+`text` text,
+`timestamp` DateTime default now()
+);
+
