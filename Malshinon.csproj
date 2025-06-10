@@ -95,7 +95,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DAL\DAL.cs" />
+    <Compile Include="DALFolder\DAL.cs" />
+    <Compile Include="AnalyzeReport.cs" />
     <Compile Include="Models\IntelReports.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Program.cs" />
