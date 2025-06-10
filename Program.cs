@@ -77,26 +77,38 @@ namespace Malshinon
         }
         private static void UpdateTypes(Person agent, Person target)
         {
-            if (agent.NumReports >= 10 && DAL.dal.GetAveOfReports(agent) >= 100)
-            {
-                ChangeStatus(agent);
-            }
             if (target.NumMentions  >= 20)
             {
                 Console.WriteLine($"{target.FirstName} {target.LastName} is potaential threat alert!");
             }
+            ChangeStatus(agent);
             ChangeStatus(target);
         }
         private static void ChangeStatus(Person person)
         {
-            //if (person.)
-            //{
-                
-            //}
-            person.Type = "potential_agent";
-            DAL.dal.EditPerson(person);
-            Console.WriteLine($"Status of {person.FirstName} {person.LastName} Changed to: {person.Type}");
+            string tmpType = person.Type;
+            bool reporter = false;
+            bool terrorist = false;
 
+
+            if (person.NumReports > 0)
+                reporter = true;
+
+            if (person.NumMentions > 1)
+                terrorist = true;
+
+            if (reporter && terrorist)
+                person.Type = "both";
+            else if (DAL.dal.GetAveOfReports(person) >= 100 && person.NumReports >= 20)
+                person.Type = "potential_agent";
+            else if (terrorist && !reporter)
+                person.Type = "target";
+
+            if (tmpType != person.Type)
+            {
+                DAL.dal.EditPerson(person);
+                Console.WriteLine($"Status of {person.FirstName} {person.LastName} Changed to: {person.Type}");
+            }
         }
         private static string GenerateCode(string name)
         {
