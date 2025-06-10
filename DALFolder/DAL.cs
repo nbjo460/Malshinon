@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Malshinon.Models;
 using MySql.Data.MySqlClient;
+using Mysqlx.Crud;
 
 namespace Malshinon.DALFolder
 {
@@ -93,6 +94,28 @@ namespace Malshinon.DALFolder
             cmd.Parameters.AddWithValue("reporterId", report.ReporterId);
             cmd.Parameters.AddWithValue("targetId", report.TargetId);
             cmd.Parameters.AddWithValue("text", report.Text);
+            cmd.ExecuteNonQuery();
+            CloseConnection();
+        }
+        public void IncrementReporter(Person agent)
+        {
+            OpenCoonection();
+            string query = "UPDATE `People` SET `NUM_REPORTS` = `NUM_REPORTS` + 1 " +
+                "WHERE `LAST_NAME` = @last AND `FIRST_NAME` = @first";
+            cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("first", agent.FirstName);
+            cmd.Parameters.AddWithValue("last", agent.LastName);
+            cmd.ExecuteNonQuery();
+            CloseConnection();
+        }
+        public void IncrementTarget(Person target) 
+        {
+            OpenCoonection();
+            string query = "UPDATE `People` SET `NUM_MENTIONS` = `NUM_MENTIONS` + 1 " +
+                "WHERE `LAST_NAME` = @last AND `FIRST_NAME` = @first";
+            cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("first", target.FirstName);
+            cmd.Parameters.AddWithValue("last", target.LastName);
             cmd.ExecuteNonQuery();
             CloseConnection();
         }

@@ -69,8 +69,9 @@ namespace Malshinon
                 Person target = dal.GetPerson(fullName[0], fullName[1]);
                 IntelReports intelReport = new IntelReports(agent.ID, target.ID, report, DateTime.Now);
                 dal.InsertReportToDB(intelReport);
+                dal.IncrementReporter(agent);
+                dal.IncrementTarget(target);
             }
-
         }
         
         private static string GenerateCode(string name)
