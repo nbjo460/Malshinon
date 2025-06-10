@@ -17,6 +17,7 @@ namespace Malshinon.Models
         public int NumMentions { get;  set; }
 
         public Person() { }
+
         public Person(string first, string last,string code, string type, int reports, int mentions)
         {
             FirstName = first;

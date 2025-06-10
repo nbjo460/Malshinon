@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Malshinon.DALFolder;
+using Malshinon.logic;
 using Malshinon.Models;
 
 namespace Malshinon
@@ -15,12 +16,15 @@ namespace Malshinon
     {
         static void run()
         {
-            DAL dal = new DAL();
-            Person Agent = Name(dal);
-            Intel(dal, Agent);
+            DAL d = DAL.DALBuilder();
+
+            
+            Person Agent = AgentEntry();
+            InsertIntel(Agent);
         }
-        private static Person Name(DAL dal)
+        private static Person AgentEntry()
         {
+            PersonDAL PersonDal = PersonDAL.PersonDal;
             string firstName, lastName;
             while (true)
             {
@@ -28,96 +32,43 @@ namespace Malshinon
                 firstName = Console.ReadLine();
                 Console.WriteLine("Enter your's last name:");
                 lastName = Console.ReadLine();
-                if (AnalyzeReport.CanBeName(firstName) && AnalyzeReport.CanBeName(lastName))
+                if (AnalyzeName.CanBeName(firstName) && AnalyzeName.CanBeName(lastName))
                 {
                     break;
                 }
                 Console.WriteLine("Wrong Name.\n");
             }
-            if (dal.IsExistPerson(firstName, lastName))
+            if (PersonDal.IsExistPerson(firstName, lastName))
             {
                 Console.WriteLine($"Hi {firstName} {lastName}");
             }
             else
             {
-                CreateName(dal, firstName, lastName);
+                PersonLogic.CreateNewPerson(firstName, lastName);
             }
-            return dal.GetPerson(firstName, lastName);
+            return PersonDal.GetPerson(firstName, lastName);
         }
-        private static void CreateName(DAL dal, string firstName, string lastName, string type = "reporter")
+        private static void InsertIntel(Person agent)
         {
-            Person p = new Person(firstName, lastName, GenerateCode(firstName + lastName), type, 0, 0);
-            if (!dal.IsExistPerson(firstName, lastName))
-            {
-                dal.AddPerson(p);
-                Console.WriteLine($"Added new Person.\n{p.FirstName} {p.LastName}");
-            }
-            else
-            {
-                Console.WriteLine($"The person: {p.FirstName} {p.LastName}. is Already Exist!");
-            }
-        }
-        private static void Intel(DAL dal, Person agent)
-        {
+            DAL dal = DAL.dal;
             Console.WriteLine("Enter a free text Report.");
             string report = Console.ReadLine();
             report = report.Trim();
 
-            List<string[]> fullNames = AnalyzeReport.GetFullNames(report);
+            List<string[]> fullNames = AnalyzeName.GetFullNames(report);
             foreach (string[] fullName in fullNames)
             {
-                CreateName(dal, fullName[0], fullName[1]);
-                Person target = dal.GetPerson(fullName[0], fullName[1]);
+                Person target = PersonLogic.CreateNewPerson(fullName[0], fullName[1]); 
                 IntelReports intelReport = new IntelReports(agent.ID, target.ID, report, DateTime.Now);
-                dal.InsertReportToDB(intelReport);
-                dal.IncrementReporter(agent);
-                dal.IncrementTarget(target);
-                UpdateTypes(agent, target);
+                ReportDAL.ReportDal.InsertReportToDB(intelReport);
+
+                agent.NumReports += 1;
+                target.NumMentions += 1;
+                PersonDAL.PersonDal.EditPerson(agent);
+                PersonDAL.PersonDal.EditPerson(target); 
+
+                PersonLogic.UpdateTypes(agent, target);
             }
-        }
-        private static void UpdateTypes(Person agent, Person target)
-        {
-            if (target.NumMentions  >= 20)
-            {
-                Console.WriteLine($"{target.FirstName} {target.LastName} is potaential threat alert!");
-            }
-            ChangeStatus(agent);
-            ChangeStatus(target);
-        }
-        private static void ChangeStatus(Person person)
-        {
-            string tmpType = person.Type;
-            bool reporter = false;
-            bool terrorist = false;
-
-
-            if (person.NumReports > 0)
-                reporter = true;
-
-            if (person.NumMentions > 1)
-                terrorist = true;
-
-            if (reporter && terrorist)
-                person.Type = "both";
-            else if (DAL.dal.GetAveOfReports(person) >= 100 && person.NumReports >= 20)
-                person.Type = "potential_agent";
-            else if (terrorist && !reporter)
-                person.Type = "target";
-
-            if (tmpType != person.Type)
-            {
-                DAL.dal.EditPerson(person);
-                Console.WriteLine($"Status of {person.FirstName} {person.LastName} Changed to: {person.Type}");
-            }
-        }
-        private static string GenerateCode(string name)
-        {
-            string upside = "";
-            for(int i = name.Length-1; i >= 0; i--)
-            {
-                upside += name[i];
-            }
-            return upside;
         }
         static void Main(string[] args)
         {

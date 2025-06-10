@@ -8,24 +8,8 @@ using System.Threading.Tasks;
 
 namespace Malshinon
 {
-    internal static class AnalyzeReport
+    internal static class AnalyzeName
     {
-        public static string[] GetName(string report)
-        {
-            report = report.Trim();
-            string[] fullName = new string[2];
-            string[] spliited = report.Split(' ');
-            for (int i = 0; i < spliited.Count() - 1; i++)
-            {
-                if (CanBeName(spliited[i]) && CanBeName(spliited[i + 1]))
-                {
-                    fullName[0] = spliited[i];
-                    fullName[1] = spliited[i + 1];
-                    return fullName;
-                }
-            }
-            return null;
-        }
 
         public static bool CanBeName(string word)
         {
