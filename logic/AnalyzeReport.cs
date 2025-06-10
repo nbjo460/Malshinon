@@ -34,7 +34,7 @@ namespace Malshinon
 
             for (int i = 1; i <word.Length;i++)
             {
-                if (word[i] == '-' && i < word.Length -1) continue;
+                if (((word[i] == '-') || (word[i] == ' ')) && i < word.Length -1) continue;
                 if (!Char.IsLetter(word[i])) return false;
             }
             return true;

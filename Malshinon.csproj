@@ -96,7 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DALFolder\DAL.cs" />
-    <Compile Include="AnalyzeReport.cs" />
+    <Compile Include="logic\AnalyzeReport.cs" />
     <Compile Include="Models\IntelReports.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Program.cs" />

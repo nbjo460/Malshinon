@@ -15,10 +15,10 @@ namespace Malshinon
         static void run()
         {
             DAL dal = new DAL();
-            Name(dal);
-            Intel(dal);
+            Person Agent = Name(dal);
+            Intel(dal, Agent);
         }
-        private static void Name(DAL dal)
+        private static Person Name(DAL dal)
         {
             string firstName, lastName;
             while (true)
@@ -41,6 +41,7 @@ namespace Malshinon
             {
                 CreateName(dal, firstName, lastName);
             }
+            return dal.GetPerson(firstName, lastName);
         }
         private static void CreateName(DAL dal, string firstName, string lastName, string type = "reporter")
         {
@@ -55,7 +56,7 @@ namespace Malshinon
                 Console.WriteLine($"The person: {p.FirstName} {p.LastName}. is Already Exist!");
             }
         }
-        private static void Intel(DAL dal)
+        private static void Intel(DAL dal, Person agent)
         {
             Console.WriteLine("Enter a free text Report.");
             string report = Console.ReadLine();
@@ -65,9 +66,13 @@ namespace Malshinon
             foreach (string[] fullName in fullNames)
             {
                 CreateName(dal, fullName[0], fullName[1]);
+                Person target = dal.GetPerson(fullName[0], fullName[1]);
+                IntelReports intelReport = new IntelReports(agent.ID, target.ID, report, DateTime.Now);
+                dal.InsertReportToDB(intelReport);
             }
 
         }
+        
         private static string GenerateCode(string name)
         {
             string upside = "";

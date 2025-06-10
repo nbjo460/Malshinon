@@ -28,7 +28,6 @@ namespace Malshinon.DALFolder
             if (connection.State != System.Data.ConnectionState.Closed ||
                 connection.State != System.Data.ConnectionState.Broken) connection.Close();
         }
-
         private MySqlDataReader CheckPerson(string _firstName, string _lastName)
         {
             OpenCoonection();
@@ -39,8 +38,6 @@ namespace Malshinon.DALFolder
             reader = cmd.ExecuteReader();
             return reader;
         }
-
-
         public bool IsExistPerson(string _firstName, string _lastName)
         {
             bool Exist = CheckPerson(_firstName, _lastName).HasRows;
@@ -56,7 +53,7 @@ namespace Malshinon.DALFolder
                 person.ID = reader.GetInt32("ID");
                 person.FirstName = reader.GetString("First_Name");
                 person.LastName = reader.GetString("Last_Name");
-                person.SecretCode = reader.GetString("SecretCode");
+                person.SecretCode = reader.GetString("Secret_Code");
                 person.Type = reader.GetString("TYPE");
                 person.NumMentions = reader.GetInt32("NUM_MENTIONS");
                 person.NumReports = reader.GetInt32("NUM_REPORTS");
@@ -87,5 +84,17 @@ namespace Malshinon.DALFolder
             CloseConnection();
         }
         public void  DeletePerson() { }
+        public void InsertReportToDB(IntelReports report)
+        {
+            OpenCoonection();
+            string query = "INSERT INTO `IntelReports` (ID, Reporter_id, TARGET_ID, text) VALUES (@id, @reporterId, @targetId, @text); ";
+            cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("id", report.ID);
+            cmd.Parameters.AddWithValue("reporterId", report.ReporterId);
+            cmd.Parameters.AddWithValue("targetId", report.TargetId);
+            cmd.Parameters.AddWithValue("text", report.Text);
+            cmd.ExecuteNonQuery();
+            CloseConnection();
+        }
     }
 }
