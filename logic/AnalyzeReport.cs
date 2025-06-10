@@ -172,45 +172,6 @@ namespace Malshinon
 
         }
 
-        //private static List<string[]> FindNames(string report)
-        //{
-        //    string[] splitted = report.Split(' ');
-        //    List<string> fullNames = new List<string>();
-
-        //    int countName = 0;
-
-        //    for (int i = 0; i < splitted.Length - 1; i++)
-        //    {
-
-        //        if (Char.IsUpper(splitted[i][0]) && Char.IsUpper(splitted[i + 1][0]))
-        //        {
-        //            //if (fullNames.Count - 1 == countName)
-        //            //{
-        //            //    fullNames.Add(new List<string> { splitted[i] });
-
-        //            //}
-        //            //else
-        //            //{
-        //            //    fullNames[countName].Add(splitted[i]);
-        //            //    //fullNames.Add(new List<string> { splitted[i] });
-
-        //            //}
-
-        //            if (countName == fullNames.Count - 2)
-        //            {
-        //                fullNames.Add(" " + splitted[i]);
-        //            }
-        //            else if()
-        //        }
-        //        else if (countName == fullNames.Count - 1 && Char.IsUpper(splitted[i][0]) && !Char.IsUpper(splitted[i + 1][0]))
-        //        {
-        //            fullNames[countName].Add(splitted[i]);
-        //            countName += 1;
-        //        }
-        //    }
-        //    return GetFullNamesByJoin(fullNames);
-
-        //}
 
 
         private static List<string[]> GetFullNamesByJoin(List<List<string>> _fullNames)

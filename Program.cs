@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -71,9 +72,32 @@ namespace Malshinon
                 dal.InsertReportToDB(intelReport);
                 dal.IncrementReporter(agent);
                 dal.IncrementTarget(target);
+                UpdateTypes(agent, target);
             }
         }
-        
+        private static void UpdateTypes(Person agent, Person target)
+        {
+            if (agent.NumReports >= 10 && DAL.dal.GetAveOfReports(agent) >= 100)
+            {
+                ChangeStatus(agent);
+            }
+            if (target.NumMentions  >= 20)
+            {
+                Console.WriteLine($"{target.FirstName} {target.LastName} is potaential threat alert!");
+            }
+            ChangeStatus(target);
+        }
+        private static void ChangeStatus(Person person)
+        {
+            //if (person.)
+            //{
+                
+            //}
+            person.Type = "potential_agent";
+            DAL.dal.EditPerson(person);
+            Console.WriteLine($"Status of {person.FirstName} {person.LastName} Changed to: {person.Type}");
+
+        }
         private static string GenerateCode(string name)
         {
             string upside = "";
