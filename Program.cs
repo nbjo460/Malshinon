@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -16,16 +17,18 @@ namespace Malshinon
     {
         static void run()
         {
-            DAL d = DAL.DALBuilder();
-
             
-            Person Agent = AgentEntry();
-            InsertIntel(Agent);
+            PersonDAL.DALBuilder();
+            ReportDAL.DALBuilder();
+
+            Menu();
+                    
         }
-        private static Person AgentEntry()
+       
+        private static void Menu()
         {
-            PersonDAL PersonDal = PersonDAL.PersonDal;
-            string firstName, lastName;
+            string firstName, lastName, report;
+
             while (true)
             {
                 Console.WriteLine("Enter your's first name:");
@@ -33,32 +36,48 @@ namespace Malshinon
                 Console.WriteLine("Enter your's last name:");
                 lastName = Console.ReadLine();
                 if (AnalyzeName.CanBeName(firstName) && AnalyzeName.CanBeName(lastName))
-                {
                     break;
-                }
                 Console.WriteLine("Wrong Name.\n");
             }
+            
+            Person Agent = AgentEntry(firstName, lastName);
+
+            while (true)
+            {
+                Console.WriteLine("Enter a free text Report.");
+                report = Console.ReadLine();
+                if (report.Length > 15) break;
+                Console.WriteLine("The report is too short!");
+            }
+            
+            InsertIntel(Agent, report);
+
+        }
+        private static Person AgentEntry(string firstName, string lastName)
+        {
+            PersonDAL PersonDal = PersonDAL.PersonDal;
+            
             if (PersonDal.IsExistPerson(firstName, lastName))
             {
                 Console.WriteLine($"Hi {firstName} {lastName}");
             }
             else
             {
-                PersonLogic.CreateNewPerson(firstName, lastName);
+                return PersonLogic.CreateNewPerson(firstName, lastName);
             }
             return PersonDal.GetPerson(firstName, lastName);
         }
-        private static void InsertIntel(Person agent)
+        private static void InsertIntel(Person agent, string report)
         {
             DAL dal = DAL.dal;
-            Console.WriteLine("Enter a free text Report.");
-            string report = Console.ReadLine();
             report = report.Trim();
 
             List<string[]> fullNames = AnalyzeName.GetFullNames(report);
             foreach (string[] fullName in fullNames)
             {
-                Person target = PersonLogic.CreateNewPerson(fullName[0], fullName[1]); 
+                Person target = PersonLogic.CreateNewPerson(fullName[0].Trim(), fullName[1].Trim());
+                Console.WriteLine($"agent PersonDAL.PersonDal.GetId(agent)  *********{agent.ID}\n" +
+                                  $"target PersonDAL.PersonDal.GetId(target)********{target.ID}");
                 IntelReports intelReport = new IntelReports(agent.ID, target.ID, report, DateTime.Now);
                 ReportDAL.ReportDal.InsertReportToDB(intelReport);
 

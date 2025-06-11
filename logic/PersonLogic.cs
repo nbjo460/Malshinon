@@ -13,14 +13,21 @@ namespace Malshinon.logic
 
         public static Person CreateNewPerson(string firstName, string lastName, string type = "reporter")
         {
+            firstName = firstName.Trim();
+            lastName = lastName.Trim();
             PersonDAL PersonDal = PersonDAL.PersonDal;
             Person p = new Person(firstName, lastName, GenerateCode(firstName + lastName), type, 0, 0);
             if (!PersonDal.IsExistPerson(firstName, lastName))
             {
                 PersonDal.AddPerson(p);
-                Console.WriteLine($"Added new Person.\n{p.FirstName} {p.LastName}");
+                p.ID = PersonDal.GetId(p);
+                Console.WriteLine($"Added new Person.\n{p.FirstName} {p.LastName} ID: {p.ID}");
             }
-            return p;
+            else
+            {
+                return PersonDal.GetPerson(firstName, lastName);
+            }
+                return p;
         }
         public static void UpdateTypes(Person agent, Person target)
         {
@@ -28,10 +35,10 @@ namespace Malshinon.logic
             {
                 Console.WriteLine($"{target.FirstName} {target.LastName} is potaential threat alert!");
             }
-            ChangeStatus(agent);
-            ChangeStatus(target);
+            ChangeStatus(agent ,true);
+            ChangeStatus(target, false);
         }
-        public static void ChangeStatus(Person person)
+        public static void ChangeStatus(Person person, bool isReporter)
         {
             string tmpType = person.Type;
             bool reporter = false;
@@ -46,7 +53,7 @@ namespace Malshinon.logic
 
             if (reporter && terrorist)
                 person.Type = "both";
-            else if (ReportDAL.ReportDal.GetAveOfReports(person) >= 100 && person.NumReports >= 20)
+            else if (isReporter && ReportDAL.ReportDal.GetAveOfReports(person) >= 100 && person.NumReports >= 20)
                 person.Type = "potential_agent";
             else if (terrorist && !reporter)
                 person.Type = "target";
@@ -66,5 +73,6 @@ namespace Malshinon.logic
             }
             return upside;
         }
+       
     }
 }

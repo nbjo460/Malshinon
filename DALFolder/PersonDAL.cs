@@ -59,7 +59,7 @@ namespace Malshinon.DALFolder
         {
             OpenConnection();
             string query = "UPDATE `PEOPLE` SET " +
-                "LAST_NAME = @last, FIRST_NAME = @first, SECRET_CODE = code, TYPE = @type, NUM_REPORTS = @reports, NUM_MENTIONS = @mentions" +
+                "LAST_NAME = @last, FIRST_NAME = @first, SECRET_CODE = @code, TYPE = @type, NUM_REPORTS = @reports, NUM_MENTIONS = @mentions" +
                 " WHERE `ID` = @id";
             cmd = new MySqlCommand(query, connection);
             cmd.Parameters.AddWithValue("last", newPerson.LastName);
@@ -94,6 +94,25 @@ namespace Malshinon.DALFolder
             CloseConnection();
         }
         public void DeletePerson() { }
+        public int GetId(Person p)
+        {
+            OpenConnection();
+            string query = "SELECT ID id FROM `People` WHERE FIRST_NAME = @first AND LAST_NAME = @last;";
+            cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("last", p.LastName.Trim());
+            cmd.Parameters.AddWithValue("first", p.FirstName.Trim());
+            reader = cmd.ExecuteReader();
+            Console.WriteLine("%%%%%%%%%%%%ROWS:" + reader.HasRows);
+            int id = 0;
+            while (reader.Read())
+            {
+                id = reader.GetInt32("id");
+                Console.WriteLine(id + " INSIDE WHILE");
+            }
+            Console.WriteLine(id+" OUTSIDE WHILE");
+            CloseConnection();
+            return id;
+        }
 
 
 

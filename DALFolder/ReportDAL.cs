@@ -20,7 +20,7 @@ namespace Malshinon.DALFolder
         }
         public int GetAveOfReports(Person agent)
         {
-            string query = "SELECT AVE(LENGTH(`TEXT`)) ave FROM `IntelReports` WHERE ID = @id";
+            string query = "SELECT AVG(LENGTH(`TEXT`)) ave FROM `IntelReports` WHERE ID = @id";
             OpenConnection();
             cmd = new MySqlCommand(query, connection);
             cmd.Parameters.AddWithValue("id", agent.ID);
@@ -28,7 +28,14 @@ namespace Malshinon.DALFolder
             int ave = 0;
             while (reader.Read())
             {
-                ave = reader.GetInt32("ave");
+                try
+                {
+                    ave = reader.GetInt32("ave");
+                }
+                catch
+                {
+
+                }
             }
             CloseConnection();
             return ave;
@@ -36,13 +43,14 @@ namespace Malshinon.DALFolder
         public void InsertReportToDB(IntelReports report)
         {
             OpenConnection();
-            string query = "INSERT INTO `IntelReports` (ID, Reporter_id, TARGET_ID, text) VALUES (@id, @reporterId, @targetId, @text); ";
+            string query = "INSERT INTO `IntelReports` ( Reporter_id, TARGET_ID, text) VALUES (@reporterId, @targetId, @text); ";
+
             cmd = new MySqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("id", report.ID);
             cmd.Parameters.AddWithValue("reporterId", report.ReporterId);
             cmd.Parameters.AddWithValue("targetId", report.TargetId);
             cmd.Parameters.AddWithValue("text", report.Text);
             cmd.ExecuteNonQuery();
+
             Console.WriteLine("Report has added.");
             CloseConnection();
         }
