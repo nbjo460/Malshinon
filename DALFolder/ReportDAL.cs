@@ -18,24 +18,17 @@ namespace Malshinon.DALFolder
             if (ReportDal == null) ReportDal = new ReportDAL();
             return ReportDal;
         }
-        public int GetAveOfReports(Person agent)
+        public double GetAveOfReports(Person agent)
         {
-            string query = "SELECT AVG(LENGTH(`TEXT`)) ave FROM `IntelReports` WHERE ID = @id";
+            string query = "SELECT AVG(LENGTH(`TEXT`)) ave FROM `IntelReports` WHERE Reporter_id = @id";
             OpenConnection();
             cmd = new MySqlCommand(query, connection);
             cmd.Parameters.AddWithValue("id", agent.ID);
             reader = cmd.ExecuteReader();
-            int ave = 0;
+            double ave = 0;
             while (reader.Read())
             {
-                try
-                {
-                    ave = reader.GetInt32("ave");
-                }
-                catch
-                {
-
-                }
+                    ave = reader.GetDouble("ave");
             }
             CloseConnection();
             return ave;

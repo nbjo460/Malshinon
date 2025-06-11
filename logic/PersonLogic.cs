@@ -48,7 +48,7 @@ namespace Malshinon.logic
             if (person.NumReports > 0)
                 reporter = true;
 
-            if (person.NumMentions > 1)
+            if (person.NumMentions > 0)
                 terrorist = true;
 
             if (reporter && terrorist)

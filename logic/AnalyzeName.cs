@@ -13,7 +13,7 @@ namespace Malshinon
 
         public static bool CanBeName(string word)
         {
-            if (word.Length < 2) return false;
+            if (word.Length < 2 || word.Length > 20) return false;
             if (Char.IsLower(word[0])) return false;
 
             for (int i = 1; i < word.Length; i++)
@@ -86,7 +86,9 @@ namespace Malshinon
                     firstName += seperatedName[i] + " ";
                 }
                 firstName.Trim();
-
+                lastName.Trim();
+                if(firstName.Length > 19) firstName = firstName.Substring(0, 19);
+                if(lastName.Length > 19) lastName = lastName.Substring(0, 19);
                 fullNamesSeperated.Add(new string[] { firstName, lastName });
             }
 

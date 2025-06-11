@@ -102,41 +102,13 @@ namespace Malshinon.DALFolder
             cmd.Parameters.AddWithValue("last", p.LastName.Trim());
             cmd.Parameters.AddWithValue("first", p.FirstName.Trim());
             reader = cmd.ExecuteReader();
-            Console.WriteLine("%%%%%%%%%%%%ROWS:" + reader.HasRows);
             int id = 0;
             while (reader.Read())
             {
                 id = reader.GetInt32("id");
-                Console.WriteLine(id + " INSIDE WHILE");
             }
-            Console.WriteLine(id+" OUTSIDE WHILE");
             CloseConnection();
             return id;
-        }
-
-
-
-        public void IncrementReporter(Person agent)
-        {
-            OpenConnection();
-            string query = "UPDATE `People` SET `NUM_REPORTS` = `NUM_REPORTS` + 1 " +
-                "WHERE `LAST_NAME` = @last AND `FIRST_NAME` = @first";
-            cmd = new MySqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("first", agent.FirstName);
-            cmd.Parameters.AddWithValue("last", agent.LastName);
-            cmd.ExecuteNonQuery();
-            CloseConnection();
-        }
-        public void IncrementTarget(Person target)
-        {
-            OpenConnection();
-            string query = "UPDATE `People` SET `NUM_MENTIONS` = `NUM_MENTIONS` + 1 " +
-                "WHERE `LAST_NAME` = @last AND `FIRST_NAME` = @first";
-            cmd = new MySqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("first", target.FirstName);
-            cmd.Parameters.AddWithValue("last", target.LastName);
-            cmd.ExecuteNonQuery();
-            CloseConnection();
         }
     }
 }
