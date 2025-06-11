@@ -8,8 +8,8 @@ DROP TABLE IF EXISTS IntelReports;
 CREATE TABLE PEOPLE 
 (
 `ID` INT PRIMARY KEY AUTO_INCREMENT,
-`FIRST_NAME` VARCHAR(20) UNIQUE not null,
-`LAST_NAME` VARCHAR(20) UNIQUE not null,
+`FIRST_NAME` VARCHAR(20)  not null,
+`LAST_NAME` VARCHAR(20)  not null,
 `SECRET_CODE` VARCHAR (30) UNIQUE not null,
 `TYPE` ENUM ('reporter', 'target', 'both', 'potential_agent') not null,
 `NUM_REPORTS` INT DEFAULT 0,
