@@ -97,9 +97,11 @@
   <ItemGroup>
     <Compile Include="DALFolder\DAL.cs" />
     <Compile Include="DALFolder\PersonDAL.cs" />
+    <Compile Include="DALFolder\AlertDAL.cs" />
     <Compile Include="DALFolder\ReportDAL.cs" />
     <Compile Include="logic\AnalyzeName.cs" />
     <Compile Include="logic\PersonLogic.cs" />
+    <Compile Include="Models\Alert.cs" />
     <Compile Include="Models\IntelReports.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Program.cs" />

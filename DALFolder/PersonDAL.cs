@@ -71,7 +71,6 @@ namespace Malshinon.DALFolder
             cmd.Parameters.AddWithValue("id", newPerson.ID);
 
             cmd.ExecuteNonQuery();
-            Console.WriteLine("The Person Changed Succefully.");
             CloseConnection();
         }
         public void AddPerson(Person person)

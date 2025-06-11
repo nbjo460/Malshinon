@@ -20,14 +20,34 @@ namespace Malshinon
             
             PersonDAL.DALBuilder();
             ReportDAL.DALBuilder();
-
+            AlertDAL.DALBuilder();
             Menu();
                     
         }
        
         private static void Menu()
         {
-            string firstName, lastName, report;
+            Person agent = EntryMenu();
+            IntelMenu(agent);
+            
+        }
+        static void IntelMenu(Person agent)
+        {
+            string report;
+            while (true)
+            {
+                Console.WriteLine("Enter a free text Report.");
+                report = Console.ReadLine();
+                if (report.Length > 10) break;
+                Console.WriteLine("The report is too short!");
+            }
+
+            InsertIntel(agent, report);
+
+        }
+        static Person EntryMenu()
+        {
+            string firstName, lastName;
 
             while (true)
             {
@@ -39,19 +59,8 @@ namespace Malshinon
                     break;
                 Console.WriteLine("Wrong Name.\n");
             }
-            
-            Person Agent = AgentEntry(firstName, lastName);
 
-            while (true)
-            {
-                Console.WriteLine("Enter a free text Report.");
-                report = Console.ReadLine();
-                if (report.Length > 15) break;
-                Console.WriteLine("The report is too short!");
-            }
-            
-            InsertIntel(Agent, report);
-
+            return AgentEntry(firstName, lastName);
         }
         private static Person AgentEntry(string firstName, string lastName)
         {
@@ -76,8 +85,6 @@ namespace Malshinon
             foreach (string[] fullName in fullNames)
             {
                 Person target = PersonLogic.CreateNewPerson(fullName[0].Trim(), fullName[1].Trim());
-                Console.WriteLine($"agent PersonDAL.PersonDal.GetId(agent)  *********{agent.ID}\n" +
-                                  $"target PersonDAL.PersonDal.GetId(target)********{target.ID}");
                 IntelReports intelReport = new IntelReports(agent.ID, target.ID, report, DateTime.Now);
                 ReportDAL.ReportDal.InsertReportToDB(intelReport);
 
@@ -87,6 +94,8 @@ namespace Malshinon
                 PersonDAL.PersonDal.EditPerson(target); 
 
                 PersonLogic.UpdateTypes(agent, target);
+                Alert alert = AlertDAL.AlertDal.GetReportsByWindowTime(target.ID,150);
+                if (alert != null)Console.WriteLine(alert);
             }
         }
         static void Main(string[] args)
