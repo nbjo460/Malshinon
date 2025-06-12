@@ -11,7 +11,7 @@ namespace Malshinon
     internal static class AnalyzeName
     {
 
-        public static bool CanBeName(string word)
+        public static bool IsValidateName(string word)
         {
             if (word.Length < 2 || word.Length > 20) return false;
             if (Char.IsLower(word[0])) return false;
@@ -36,7 +36,7 @@ namespace Malshinon
             int splittedLength = splitted.Count();
             for (int i = 0; i < (splittedLength - 1); i++)
             {
-                if (CanBeName(splitted[i]) && CanBeName(splitted[i + 1]))
+                if (IsValidateName(splitted[i]) && IsValidateName(splitted[i + 1]))
                 {
 
                     if (newName)
@@ -53,7 +53,7 @@ namespace Malshinon
 
                     continuingName = true;
                 }
-                else if (CanBeName(splitted[i]) && !CanBeName(splitted[i + 1]))
+                else if (IsValidateName(splitted[i]) && !IsValidateName(splitted[i + 1]))
                 {
                     if (continuingName)
                     {

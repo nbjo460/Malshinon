@@ -22,41 +22,76 @@ namespace Malshinon.DALFolder
 
         private MySqlDataReader CheckPerson(string _firstName, string _lastName)
         {
-            OpenConnection();
-            string query = "SELECT * FROM PEOPLE WHERE FIRST_NAME = @firstName AND LAST_NAME = @lastName;";
-            cmd = new MySqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("firstName", _firstName);
-            cmd.Parameters.AddWithValue("lastName", _lastName);
-            reader = cmd.ExecuteReader();
-            return reader;
+            try
+            {
+                OpenConnection();
+                string query = "SELECT * FROM PEOPLE WHERE FIRST_NAME = @firstName AND LAST_NAME = @lastName;";
+                cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("firstName", _firstName);
+                cmd.Parameters.AddWithValue("lastName", _lastName);
+                reader = cmd.ExecuteReader();
+                return reader;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
+            
         }
         public bool IsExistPerson(string _firstName, string _lastName)
         {
-            bool Exist = CheckPerson(_firstName, _lastName).HasRows;
-            CloseConnection();
-            return Exist;
+            try
+            {
+                bool Exist = CheckPerson(_firstName, _lastName).HasRows;
+                CloseConnection();
+                return Exist;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
         }
         public Person GetPerson(string _firstName, string _lastName)
         {
-            Person person = new Person();
-            reader = CheckPerson(_firstName, _lastName);
-            while (reader.Read())
+            try
             {
-                person.ID = reader.GetInt32("ID");
-                person.FirstName = reader.GetString("First_Name");
-                person.LastName = reader.GetString("Last_Name");
-                person.SecretCode = reader.GetString("Secret_Code");
-                person.Type = reader.GetString("TYPE");
-                person.NumMentions = reader.GetInt32("NUM_MENTIONS");
-                person.NumReports = reader.GetInt32("NUM_REPORTS");
+                Person person = new Person();
+                reader = CheckPerson(_firstName, _lastName);
+                while (reader.Read())
+                {
+                    person.ID = reader.GetInt32("ID");
+                    person.FirstName = reader.GetString("First_Name");
+                    person.LastName = reader.GetString("Last_Name");
+                    person.SecretCode = reader.GetString("Secret_Code");
+                    person.Type = reader.GetString("TYPE");
+                    person.NumMentions = reader.GetInt32("NUM_MENTIONS");
+                    person.NumReports = reader.GetInt32("NUM_REPORTS");
+                }
+
+                CloseConnection();
+
+                return person;
             }
-
-            CloseConnection();
-
-            return person;
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
         public void EditPerson(Person newPerson)
         {
+            try { 
             OpenConnection();
             string query = "UPDATE `PEOPLE` SET " +
                 "LAST_NAME = @last, FIRST_NAME = @first, SECRET_CODE = @code, TYPE = @type, NUM_REPORTS = @reports, NUM_MENTIONS = @mentions" +
@@ -71,11 +106,20 @@ namespace Malshinon.DALFolder
             cmd.Parameters.AddWithValue("id", newPerson.ID);
 
             cmd.ExecuteNonQuery();
-            Console.WriteLine("The Person Changed Succefully.");
             CloseConnection();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
         public void AddPerson(Person person)
         {
+            try { 
             OpenConnection();
             string query =
             "INSERT INTO PEOPLE (FIRST_NAME, LAST_NAME, SECRET_CODE, TYPE, NUM_REPORTS, NUM_MENTIONS)" +
@@ -92,10 +136,20 @@ namespace Malshinon.DALFolder
 
             reader = cmd.ExecuteReader();
             CloseConnection();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
         public void DeletePerson() { }
         public int GetId(Person p)
         {
+            try { 
             OpenConnection();
             string query = "SELECT ID id FROM `People` WHERE FIRST_NAME = @first AND LAST_NAME = @last;";
             cmd = new MySqlCommand(query, connection);
@@ -109,6 +163,16 @@ namespace Malshinon.DALFolder
             }
             CloseConnection();
             return id;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return 0;
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
     }
 }

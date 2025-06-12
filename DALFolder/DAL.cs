@@ -11,7 +11,7 @@ using Mysqlx.Crud;
 
 namespace Malshinon.DALFolder
 {
-     public class DAL
+    public class DAL
     {
         public static DAL dal { get; private set; } = null;
 
@@ -26,19 +26,40 @@ namespace Malshinon.DALFolder
 
         public static DAL DALBuilder()
         {
-            if (dal==null)  dal = new DAL();
+            if (dal == null) dal = new DAL();
             return dal;
         }
 
         protected void OpenConnection()
         {
-            if(connection.State == System.Data.ConnectionState.Closed) connection.Open();
+            try
+            {
+                if (connection.State == System.Data.ConnectionState.Closed) connection.Open();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
         }
         protected void CloseConnection()
         {
-            if (connection.State != System.Data.ConnectionState.Closed ||
-                connection.State != System.Data.ConnectionState.Broken) connection.Close();
+            try
+            {
+                if (connection.State != System.Data.ConnectionState.Closed ||
+                    connection.State != System.Data.ConnectionState.Broken) connection.Close();
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
         }
-        
     }
 }
