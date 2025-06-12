@@ -44,7 +44,6 @@ namespace Malshinon.DALFolder
             try
             {
                 bool Exist = CheckPerson(_firstName, _lastName).HasRows;
-                CloseConnection();
                 return Exist;
             }
             catch (Exception ex)
@@ -75,7 +74,6 @@ namespace Malshinon.DALFolder
                     person.NumReports = reader.GetInt32("NUM_REPORTS");
                 }
 
-                CloseConnection();
 
                 return person;
             }
@@ -106,7 +104,6 @@ namespace Malshinon.DALFolder
             cmd.Parameters.AddWithValue("id", newPerson.ID);
 
             cmd.ExecuteNonQuery();
-            CloseConnection();
             }
             catch (Exception ex)
             {
@@ -135,7 +132,6 @@ namespace Malshinon.DALFolder
             cmd.Parameters.AddWithValue("num_mentions", person.NumMentions);
 
             reader = cmd.ExecuteReader();
-            CloseConnection();
             }
             catch (Exception ex)
             {
@@ -161,7 +157,6 @@ namespace Malshinon.DALFolder
             {
                 id = reader.GetInt32("id");
             }
-            CloseConnection();
             return id;
             }
             catch (Exception ex)

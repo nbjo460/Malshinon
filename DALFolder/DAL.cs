@@ -55,10 +55,6 @@ namespace Malshinon.DALFolder
             {
                 Console.WriteLine(ex);
             }
-            finally
-            {
-                CloseConnection();
-            }
 
         }
     }

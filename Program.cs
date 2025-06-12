@@ -5,6 +5,7 @@ using System.ComponentModel.Design;
 using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 using Malshinon.DALFolder;
@@ -36,7 +37,13 @@ namespace Malshinon
             string report;
             while (true)
             {
-                Console.WriteLine("Enter a free text Report.");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("\n\nEnter a free text Report.\n" +
+                    "-----------Remember: The Report should be longer than 10 letters. Also it's will repeat.\n" +
+                    "-----------The system can get more than 1 name. And each first name can include more than 1 name." +
+                    "\n-----------Each name shuold be With capitalize letter. When lowwer letter seperate the names.\n" +
+                    "-----------Name is First + Last.\n");
+                Console.ForegroundColor = ConsoleColor.White;
                 report = Console.ReadLine();
                 if (report.Length > 10) break;
                 Console.WriteLine("The report is too short!");
