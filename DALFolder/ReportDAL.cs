@@ -20,6 +20,7 @@ namespace Malshinon.DALFolder
         }
         public double GetAveOfReports(Person agent)
         {
+            try { 
             string query = "SELECT AVG(LENGTH(`TEXT`)) ave FROM `IntelReports` WHERE Reporter_id = @id";
             OpenConnection();
             cmd = new MySqlCommand(query, connection);
@@ -32,9 +33,20 @@ namespace Malshinon.DALFolder
             }
             CloseConnection();
             return ave;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return 0;
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
         public void InsertReportToDB(IntelReports report)
         {
+            try { 
             OpenConnection();
             string query = "INSERT INTO `IntelReports` ( Reporter_id, TARGET_ID, text) VALUES (@reporterId, @targetId, @text); ";
 
@@ -46,6 +58,15 @@ namespace Malshinon.DALFolder
 
             Console.WriteLine("Report has added.");
             CloseConnection();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         

@@ -55,7 +55,7 @@ namespace Malshinon
                 firstName = Console.ReadLine();
                 Console.WriteLine("Enter your's last name:");
                 lastName = Console.ReadLine();
-                if (AnalyzeName.CanBeName(firstName) && AnalyzeName.CanBeName(lastName))
+                if (AnalyzeName.IsValidateName(firstName) && AnalyzeName.IsValidateName(lastName))
                     break;
                 Console.WriteLine("Wrong Name.\n");
             }
@@ -94,7 +94,7 @@ namespace Malshinon
                 PersonDAL.PersonDal.EditPerson(target); 
 
                 PersonLogic.UpdateTypes(agent, target);
-                Alert alert = AlertDAL.AlertDal.GetReportsByWindowTime(target.ID,150);
+                Alert alert = AlertDAL.AlertDal.GetReportsByWindowTime(target.ID, 15);
                 if (alert != null)Console.WriteLine(alert);
             }
         }
